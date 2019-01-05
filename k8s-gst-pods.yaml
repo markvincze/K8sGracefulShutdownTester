@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: gst1
+  namespace: mvincze-playground
+  labels:
+    app: gst
+spec:
+  containers:
+  - name: gst
+    image: markvincze/k8s-graceful-shutdown-tester:1
+    ports:
+    - containerPort: 5000
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: gst2
+  namespace: mvincze-playground
+  labels:
+    app: gst
+spec:
+  containers:
+  - name: gst
+    image: markvincze/k8s-graceful-shutdown-tester:1
+    ports:
+    - containerPort: 5000
