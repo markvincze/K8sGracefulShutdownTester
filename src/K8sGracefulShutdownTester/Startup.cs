@@ -64,6 +64,7 @@ namespace K8sGracefulShutdownTester
 
         private void ApplicationStopping()
         {
+            state = State.AfterSigterm;
             Log("ApplicationStopping called");
             // Log("ApplicationStopping called, sleeping for 10s");
             // Thread.Sleep(10000);
