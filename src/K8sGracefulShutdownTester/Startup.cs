@@ -27,7 +27,7 @@ namespace K8sGracefulShutdownTester
         {
         }
 
-        private async Task Sleep(int seconds)
+        private async Task SleepAndPrintForSeconds(int seconds)
         {
             do
             {
@@ -40,15 +40,23 @@ namespace K8sGracefulShutdownTester
         {
             Log($"Application starting. Process ID: {Process.GetCurrentProcess().Id}");
             appLifetime.ApplicationStopping.Register(ApplicationStopping);
-            appLifetime.ApplicationStopping.Register(ApplicationStopped);
+            appLifetime.ApplicationStopped.Register(ApplicationStopped);
+
 
             app.Run(async (context) =>
             {
                 var message = $"Host: {Environment.MachineName}, State: {state}";
 
-                Log($"Incoming request, {message}");
+                Log($"Incoming request at {context.Request.Path}, {message}");
 
-                await Sleep(10);
+                if (context.Request.Path.Value.Contains("slow"))
+                {
+                    await SleepAndPrintForSeconds(10);
+                }
+                else
+                {
+                    await Task.Delay(100);
+                }
 
                 await context.Response.WriteAsync(message);
             });
@@ -56,7 +64,8 @@ namespace K8sGracefulShutdownTester
 
         private void ApplicationStopping()
         {
-            Log("ApplicationStopping called, sleeping for 10s");
+            Log("ApplicationStopping called");
+            // Log("ApplicationStopping called, sleeping for 10s");
             // Thread.Sleep(10000);
             // Log("ApplicationStopping 10s sleep done");
         }

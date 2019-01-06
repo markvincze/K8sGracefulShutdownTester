@@ -8,9 +8,16 @@ metadata:
 spec:
   containers:
   - name: gst
-    image: markvincze/k8s-graceful-shutdown-tester:1
+    image: markvincze/k8s-graceful-shutdown-tester:8
     ports:
     - containerPort: 5000
+    # lifecycle:
+    #   preStop:
+    #     exec:
+    #       command:
+    #       - "sh"
+    #       - "-c"
+    #       - "./preStop.sh"
 ---
 apiVersion: v1
 kind: Pod
@@ -22,6 +29,10 @@ metadata:
 spec:
   containers:
   - name: gst
-    image: markvincze/k8s-graceful-shutdown-tester:1
+    image: markvincze/k8s-graceful-shutdown-tester:8
     ports:
     - containerPort: 5000
+    # lifecycle:
+    #   preStop:
+    #     exec:
+    #       command: ["/bin/sleep", "20"]

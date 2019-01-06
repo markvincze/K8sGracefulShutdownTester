@@ -6,8 +6,8 @@ namespace K8sGracefulShutdownTester.Tester
 {
     class Program
     {
-        // const string serviceUrl = "http://35.241.131.163/";
-        const string serviceUrl = "http://localhost:5000/";
+        const string serviceUrl = "http://35.241.131.163/";
+        //const string serviceUrl = "http://localhost:5000/";
 
         static void Main(string[] args)
         {
@@ -17,22 +17,26 @@ namespace K8sGracefulShutdownTester.Tester
 
         static async Task Test()
         {
-            using (var httpClient = new HttpClient())
+            while (true)
             {
-                while (true)
+                using (var httpClient = new HttpClient { Timeout = TimeSpan.FromSeconds(2) })
                 {
                     try
                     {
                         var resp = await httpClient.GetAsync(serviceUrl);
 
-                        if (!resp.IsSuccessStatusCode)
+                        if (resp.IsSuccessStatusCode)
                         {
-                            Console.WriteLine("Error! StatusCode: {0}, Response: {1}", resp.StatusCode, await resp.Content.ReadAsStringAsync());
+                            Console.WriteLine("{0}: Successful request", DateTime.UtcNow);
+                        }
+                        else
+                        {
+                            Console.WriteLine("{0}: Error! StatusCode: {1}, Response: {2}", DateTime.UtcNow, resp.StatusCode, await resp.Content.ReadAsStringAsync());
                         }
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine("Error! Exception: {0}", ex.Message);
+                        Console.WriteLine("{0}: Error! Exception: {1}", DateTime.UtcNow, ex.Message);
                     }
                 }
             }
