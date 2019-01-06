@@ -42,7 +42,6 @@ namespace K8sGracefulShutdownTester
             appLifetime.ApplicationStopping.Register(ApplicationStopping);
             appLifetime.ApplicationStopped.Register(ApplicationStopped);
 
-
             app.Run(async (context) =>
             {
                 var message = $"Host: {Environment.MachineName}, State: {state}";
@@ -66,8 +65,8 @@ namespace K8sGracefulShutdownTester
         {
             state = State.AfterSigterm;
             Log("ApplicationStopping called");
-            // Log("ApplicationStopping called, sleeping for 10s");
-            // Thread.Sleep(10000);
+            // Log("ApplicationStopping called, sleeping for 25s");
+            // Thread.Sleep(25000);
             // Log("ApplicationStopping 10s sleep done");
         }
 
